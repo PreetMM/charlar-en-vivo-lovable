@@ -213,7 +213,7 @@ const Index = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="space-y-3">
               {filteredConversations.map((conversation) => (
                 <ConversationCard
                   key={conversation.id}

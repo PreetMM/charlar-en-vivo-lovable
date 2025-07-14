@@ -78,100 +78,120 @@ export const ConversationCard = ({
   };
 
   return (
-    <Card className="border-0 shadow-chat hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+    <Card className="border-0 shadow-chat hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
       <CardContent className="p-4">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <div className="flex items-center space-x-2 mb-1">
-              <h3 className="font-semibold text-foreground">
-                {conversation.contactName || "Contacto sin nombre"}
-              </h3>
-              <div className="flex items-center text-xs text-muted-foreground">
-                <Phone className="h-3 w-3 mr-1" />
-                {conversation.phoneNumber}
+        {/* Layout optimizado para lista */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          
+          {/* Información principal del contacto */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-3">
+                <h3 className="font-semibold text-foreground truncate">
+                  {conversation.contactName || "Contacto sin nombre"}
+                </h3>
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <Phone className="h-3 w-3 mr-1" />
+                  {conversation.phoneNumber}
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground text-right lg:hidden">
+                <div className="flex items-center">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {timeAgo}
+                </div>
               </div>
             </div>
+            
             <Badge 
               variant={config.badge as any}
-              className={`${config.color} text-xs`}
+              className={`${config.color} text-xs mb-3`}
             >
               <StatusIcon className="h-3 w-3 mr-1" />
               {config.label}
             </Badge>
-          </div>
-          <div className="text-xs text-muted-foreground text-right">
-            <div className="flex items-center">
-              <Clock className="h-3 w-3 mr-1" />
-              {timeAgo}
-            </div>
-            <div className="mt-1">
-              {conversation.messagesCount} mensajes
-            </div>
-          </div>
-        </div>
 
-        {/* Messages Preview */}
-        <div className="space-y-2 mb-4">
-          <div className="bg-muted/50 rounded-lg p-2">
-            <div className="text-xs text-muted-foreground mb-1">
-              Último mensaje recibido:
+            {/* Mensajes en diseño horizontal para lista */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              <div className="bg-muted/50 rounded-lg p-2">
+                <div className="text-xs text-muted-foreground mb-1">
+                  Último recibido:
+                </div>
+                <p className="text-sm text-foreground">
+                  {truncateMessage(conversation.lastReceivedMessage, 45)}
+                </p>
+              </div>
+              <div className="bg-whatsapp-light/50 rounded-lg p-2">
+                <div className="text-xs text-muted-foreground mb-1">
+                  Último enviado:
+                </div>
+                <p className="text-sm text-foreground">
+                  {truncateMessage(conversation.lastSentMessage, 45)}
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-foreground">
-              {truncateMessage(conversation.lastReceivedMessage)}
-            </p>
           </div>
-          <div className="bg-whatsapp-light/50 rounded-lg p-2">
-            <div className="text-xs text-muted-foreground mb-1">
-              Último mensaje enviado:
-            </div>
-            <p className="text-sm text-foreground">
-              {truncateMessage(conversation.lastSentMessage)}
-            </p>
-          </div>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            variant={conversation.status === 'agente_activo' ? "outline" : "default"}
-            onClick={handleToggleMode}
-            className="flex-1 min-w-0"
-          >
-            {conversation.status === 'agente_activo' ? (
-              <>
-                <User className="h-3 w-3 mr-1" />
-                Intervención Humana
-              </>
-            ) : (
-              <>
-                <Bot className="h-3 w-3 mr-1" />
-                Modo Agente IA
-              </>
-            )}
-          </Button>
-          
-          {conversation.status !== 'estancada' && (
+          {/* Información de tiempo y estadísticas */}
+          <div className="flex flex-col items-end justify-center space-y-2 min-w-0 lg:min-w-[120px]">
+            <div className="text-xs text-muted-foreground text-right hidden lg:block">
+              <div className="flex items-center">
+                <Clock className="h-3 w-3 mr-1" />
+                {timeAgo}
+              </div>
+              <div className="mt-1">
+                {conversation.messagesCount} mensajes
+              </div>
+            </div>
+          </div>
+
+          {/* Botones de acción */}
+          <div className="flex flex-wrap lg:flex-col gap-2 lg:min-w-[200px]">
             <Button
               size="sm"
-              variant="destructive"
-              onClick={handleMarkStalled}
+              variant={conversation.status === 'agente_activo' ? "outline" : "default"}
+              onClick={handleToggleMode}
+              className="flex-1 lg:w-full"
             >
-              <AlertTriangle className="h-3 w-3 mr-1" />
-              Marcar Estancada
+              {conversation.status === 'agente_activo' ? (
+                <>
+                  <User className="h-3 w-3 mr-1" />
+                  Intervención Humana
+                </>
+              ) : (
+                <>
+                  <Bot className="h-3 w-3 mr-1" />
+                  Modo Agente IA
+                </>
+              )}
             </Button>
-          )}
-          
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => onOpenChat(conversation.id)}
-            className="flex-1 min-w-0"
-          >
-            <MessageSquare className="h-3 w-3 mr-1" />
-            Ver Historial
-          </Button>
+            
+            <div className="flex gap-2 lg:w-full">
+              {conversation.status !== 'estancada' && (
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleMarkStalled}
+                  className="flex-1"
+                >
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  <span className="hidden sm:inline">Marcar Estancada</span>
+                  <span className="sm:hidden">Estancada</span>
+                </Button>
+              )}
+              
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => onOpenChat(conversation.id)}
+                className="flex-1"
+              >
+                <MessageSquare className="h-3 w-3 mr-1" />
+                <span className="hidden sm:inline">Ver Historial</span>
+                <span className="sm:hidden">Historial</span>
+              </Button>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
