@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   MessageSquare, 
   Bot, 
@@ -7,15 +9,19 @@ import {
   Calendar, 
   AlertTriangle, 
   Clock,
-  CalendarCheck
+  CalendarCheck,
+  Timer,
+  Target
 } from "lucide-react";
-import { DashboardMetrics as MetricsType } from "./types";
+import { DashboardMetrics as MetricsType, TimeFilter } from "./types";
 
 interface DashboardMetricsProps {
   metrics: MetricsType;
+  timeFilter: TimeFilter;
+  onTimeFilterChange: (filter: TimeFilter) => void;
 }
 
-export const DashboardMetrics = ({ metrics }: DashboardMetricsProps) => {
+export const DashboardMetrics = ({ metrics, timeFilter, onTimeFilterChange }: DashboardMetricsProps) => {
   const formatTime = (minutes: number) => {
     if (minutes < 60) {
       return `${Math.round(minutes)} min`;
@@ -55,11 +61,18 @@ export const DashboardMetrics = ({ metrics }: DashboardMetricsProps) => {
       description: "Agendamientos completados"
     },
     {
-      title: "Conversaciones Estancadas",
-      value: metrics.conversacionesEstancadas,
+      title: "Sin Responder",
+      value: metrics.conversacionesSinResponder,
       icon: AlertTriangle,
       color: "bg-status-stalled text-white",
       description: "Sin respuesta +30 min"
+    },
+    {
+      title: "Pendientes Agendar",
+      value: metrics.pendientesAgendar,
+      icon: Calendar,
+      color: "bg-orange-500 text-white",
+      description: "Requieren agendamiento"
     }
   ];
 
@@ -75,13 +88,37 @@ export const DashboardMetrics = ({ metrics }: DashboardMetricsProps) => {
       value: formatTime(metrics.tiempoPromedioAgendamiento),
       icon: CalendarCheck,
       description: "Desde inicio hasta cita"
+    },
+    {
+      title: "Tiempo Manual Ahorrado",
+      value: `${metrics.tiempoManualAhorrado}h`,
+      icon: Timer,
+      description: "Horas ahorradas por automatización"
+    },
+    {
+      title: "Asistencia a Citas",
+      value: `${metrics.asistenciaCitas}%`,
+      icon: Target,
+      description: "Porcentaje de asistencia"
     }
   ];
 
   return (
     <div className="space-y-6">
+      {/* Time Filter */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Filtro de Tiempo</h3>
+        <Tabs value={timeFilter} onValueChange={onTimeFilterChange}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="hora">Hora</TabsTrigger>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mes</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       {/* Main Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {metricsData.map((metric, index) => (
           <Card key={index} className="relative overflow-hidden border-0 shadow-card-custom">
             <CardHeader className="pb-2">
@@ -107,7 +144,7 @@ export const DashboardMetrics = ({ metrics }: DashboardMetricsProps) => {
       </div>
 
       {/* Time Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {timeMetrics.map((metric, index) => (
           <Card key={index} className="border-0 shadow-card-custom bg-gradient-card">
             <CardHeader className="pb-2">

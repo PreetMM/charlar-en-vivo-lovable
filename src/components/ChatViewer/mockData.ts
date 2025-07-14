@@ -42,7 +42,7 @@ export const mockConversations: Conversation[] = [
     lastReceivedMessage: "Hola?",
     lastSentMessage: "Hola Juan, ¿en qué puedo ayudarte hoy?",
     lastMessageTime: new Date(Date.now() - 45 * 60 * 1000), // 45 minutos atrás
-    status: "estancada",
+    status: "sin_responder",
     messagesCount: 3,
     averageResponseTime: 1.2
   },
@@ -67,6 +67,17 @@ export const mockConversations: Conversation[] = [
     status: "intervencion_humana",
     messagesCount: 9,
     averageResponseTime: 4.7
+  },
+  {
+    id: "7",
+    contactName: "Patricia Fernández",
+    phoneNumber: "+34 645 123 456",
+    lastReceivedMessage: "Me gustaría agendar una cita para la próxima semana",
+    lastSentMessage: "Perfecto Patricia, voy a revisar las opciones disponibles para ti.",
+    lastMessageTime: new Date(Date.now() - 10 * 60 * 1000), // 10 minutos atrás
+    status: "pendiente_agendar",
+    messagesCount: 5,
+    averageResponseTime: 2.8
   }
 ];
 
@@ -160,11 +171,14 @@ export const mockChatMessages: { [conversationId: string]: ChatMessage[] } = {
 
 // Métricas simuladas para el dashboard
 export const mockDashboardMetrics: DashboardMetrics = {
-  totalConversacionesActivas: 24,
-  conversacionesAgente: 15,
-  intervenciouesHumanas: 4,
-  citasAgendadas: 8,
-  conversacionesEstancadas: 3,
-  tiempoPromedioRespuesta: 2.8, // minutos
-  tiempoPromedioAgendamiento: 18.5 // minutos
+  totalConversacionesActivas: 52,
+  conversacionesAgente: 32,
+  intervenciouesHumanas: 8,
+  citasAgendadas: 12,
+  conversacionesSinResponder: 7,
+  pendientesAgendar: 5,
+  tiempoPromedioRespuesta: 2.5,
+  tiempoPromedioAgendamiento: 12,
+  tiempoManualAhorrado: 24.5,
+  asistenciaCitas: 87
 };

@@ -33,8 +33,8 @@ const statusConfig = {
     color: "bg-status-human text-white",
     badge: "secondary"
   },
-  estancada: {
-    label: "Conversación estancada",
+  sin_responder: {
+    label: "Sin responder",
     icon: AlertTriangle,
     color: "bg-status-stalled text-white",
     badge: "destructive"
@@ -44,6 +44,12 @@ const statusConfig = {
     icon: Calendar,
     color: "bg-status-scheduled text-white",
     badge: "outline"
+  },
+  pendiente_agendar: {
+    label: "Pendiente agendar",
+    icon: Calendar,
+    color: "bg-orange-500 text-white",
+    badge: "secondary"
   }
 } as const;
 
@@ -63,7 +69,7 @@ export const ConversationCard = ({
   };
 
   const handleMarkStalled = () => {
-    onStatusChange(conversation.id, 'estancada');
+    onStatusChange(conversation.id, 'sin_responder');
   };
 
   const timeAgo = formatDistanceToNow(conversation.lastMessageTime, {
@@ -167,7 +173,7 @@ export const ConversationCard = ({
             </Button>
             
             <div className="flex gap-2 lg:w-full">
-              {conversation.status !== 'estancada' && (
+              {conversation.status !== 'sin_responder' && (
                 <Button
                   size="sm"
                   variant="destructive"
@@ -175,8 +181,8 @@ export const ConversationCard = ({
                   className="flex-1"
                 >
                   <AlertTriangle className="h-3 w-3 mr-1" />
-                  <span className="hidden sm:inline">Marcar Estancada</span>
-                  <span className="sm:hidden">Estancada</span>
+                  <span className="hidden sm:inline">Sin Responder</span>
+                  <span className="sm:hidden">Sin Responder</span>
                 </Button>
               )}
               

@@ -55,8 +55,9 @@ export const ChatHistoryModal = ({
     const statusLabels = {
       agente_activo: "Agente IA",
       intervencion_humana: "Intervención Humana",
-      estancada: "Estancada",
-      agendada: "Agendada"
+      sin_responder: "Sin Responder",
+      agendada: "Agendada",
+      pendiente_agendar: "Pendiente Agendar"
     };
 
     toast({
@@ -126,8 +127,9 @@ export const ChatHistoryModal = ({
             <Badge variant="outline">
               {conversation.status === 'agente_activo' && 'Agente IA Activo'}
               {conversation.status === 'intervencion_humana' && 'Intervención Humana'}
-              {conversation.status === 'estancada' && 'Conversación Estancada'}
+              {conversation.status === 'sin_responder' && 'Sin Responder'}
               {conversation.status === 'agendada' && 'Cita Agendada'}
+              {conversation.status === 'pendiente_agendar' && 'Pendiente Agendar'}
             </Badge>
           </div>
         </DialogHeader>
@@ -159,14 +161,24 @@ export const ChatHistoryModal = ({
                   <User className="h-3 w-3 mr-1" />
                   Intervención Humana
                 </Button>
-                {conversation.status !== 'estancada' && (
+                {conversation.status !== 'sin_responder' && (
                   <Button
                     size="sm"
                     variant="destructive"
-                    onClick={() => handleStatusChange('estancada')}
+                    onClick={() => handleStatusChange('sin_responder')}
                   >
                     <AlertTriangle className="h-3 w-3 mr-1" />
-                    Marcar Estancada
+                    Sin Responder
+                  </Button>
+                )}
+                {conversation.status !== 'pendiente_agendar' && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleStatusChange('pendiente_agendar')}
+                  >
+                    <Calendar className="h-3 w-3 mr-1" />
+                    Pendiente Agendar
                   </Button>
                 )}
                 {conversation.status !== 'agendada' && (

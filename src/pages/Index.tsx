@@ -22,7 +22,7 @@ import {
   mockDashboardMetrics, 
   mockChatMessages 
 } from "@/components/ChatViewer/mockData";
-import { Conversation, ConversationStatus, ChatMessage } from "@/components/ChatViewer/types";
+import { Conversation, ConversationStatus, ChatMessage, TimeFilter } from "@/components/ChatViewer/types";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -33,6 +33,7 @@ const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<ConversationStatus | "todas">("todas");
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>("semana");
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const { toast } = useToast();
 
@@ -67,14 +68,16 @@ const Index = () => {
       conversacionesAgente: updatedConversations.filter(c => c.status === 'agente_activo').length,
       intervenciouesHumanas: updatedConversations.filter(c => c.status === 'intervencion_humana').length,
       citasAgendadas: updatedConversations.filter(c => c.status === 'agendada').length,
-      conversacionesEstancadas: updatedConversations.filter(c => c.status === 'estancada').length,
+      conversacionesSinResponder: updatedConversations.filter(c => c.status === 'sin_responder').length,
+      pendientesAgendar: updatedConversations.filter(c => c.status === 'pendiente_agendar').length,
     });
 
     const statusLabels = {
       agente_activo: "Agente IA",
       intervencion_humana: "Intervención Humana",
-      estancada: "Estancada",
-      agendada: "Agendada"
+      sin_responder: "Sin Responder",
+      agendada: "Agendada",
+      pendiente_agendar: "Pendiente Agendar"
     };
 
     toast({
@@ -181,7 +184,11 @@ const Index = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <DashboardMetrics metrics={metrics} />
+            <DashboardMetrics 
+              metrics={metrics} 
+              timeFilter={timeFilter}
+              onTimeFilterChange={setTimeFilter}
+            />
           </CardContent>
         </Card>
 
@@ -205,12 +212,13 @@ const Index = () => {
                   onValueChange={(value) => setStatusFilter(value as ConversationStatus | "todas")}
                   className="w-auto"
                 >
-                  <TabsList className="grid w-full grid-cols-5">
+                  <TabsList className="grid w-full grid-cols-6">
                     <TabsTrigger value="todas">Todas</TabsTrigger>
                     <TabsTrigger value="agente_activo">Agente</TabsTrigger>
                     <TabsTrigger value="intervencion_humana">Humano</TabsTrigger>
                     <TabsTrigger value="agendada">Agendadas</TabsTrigger>
-                    <TabsTrigger value="estancada">Estancadas</TabsTrigger>
+                    <TabsTrigger value="pendiente_agendar">Pendientes</TabsTrigger>
+                    <TabsTrigger value="sin_responder">Sin Responder</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>

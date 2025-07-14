@@ -5,7 +5,7 @@ export interface Conversation {
   lastReceivedMessage: string;
   lastSentMessage: string;
   lastMessageTime: Date;
-  status: 'agente_activo' | 'intervencion_humana' | 'estancada' | 'agendada';
+  status: 'agente_activo' | 'intervencion_humana' | 'sin_responder' | 'agendada' | 'pendiente_agendar';
   messagesCount: number;
   averageResponseTime?: number;
 }
@@ -24,9 +24,14 @@ export interface DashboardMetrics {
   conversacionesAgente: number;
   intervenciouesHumanas: number;
   citasAgendadas: number;
-  conversacionesEstancadas: number;
+  conversacionesSinResponder: number;
+  pendientesAgendar: number;
   tiempoPromedioRespuesta: number; // en minutos
   tiempoPromedioAgendamiento: number; // en minutos
+  tiempoManualAhorrado: number; // en horas
+  asistenciaCitas: number; // porcentaje
 }
 
-export type ConversationStatus = 'agente_activo' | 'intervencion_humana' | 'estancada' | 'agendada';
+export type ConversationStatus = 'agente_activo' | 'intervencion_humana' | 'sin_responder' | 'agendada' | 'pendiente_agendar';
+
+export type TimeFilter = 'hora' | 'semana' | 'mes';
