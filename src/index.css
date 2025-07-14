@@ -17,33 +17,33 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 142 76% 36%;
+    --primary: 168 76% 64%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 142 32% 93%;
-    --secondary-foreground: 142 76% 20%;
+    --secondary: 168 32% 93%;
+    --secondary-foreground: 168 76% 20%;
 
-    --muted: 142 15% 96%;
+    --muted: 168 15% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 142 32% 93%;
-    --accent-foreground: 142 76% 20%;
+    --accent: 168 32% 93%;
+    --accent-foreground: 168 76% 20%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 142 76% 36%;
+    --ring: 168 76% 64%;
 
-    /* WhatsApp-inspired colors */
-    --whatsapp-primary: 142 70% 49%;
-    --whatsapp-secondary: 142 85% 25%;
-    --whatsapp-light: 142 32% 93%;
-    --whatsapp-bg: 112 20% 95%;
+    /* WhatsApp-inspired colors with TIM theme */
+    --whatsapp-primary: 168 70% 49%;
+    --whatsapp-secondary: 168 85% 25%;
+    --whatsapp-light: 168 32% 93%;
+    --whatsapp-bg: 168 20% 95%;
     
     /* Status colors */
-    --status-active: 142 76% 36%;
+    --status-active: 168 76% 64%;
     --status-human: 39 100% 50%;
     --status-stalled: 0 84% 60%;
     --status-scheduled: 217 91% 60%;

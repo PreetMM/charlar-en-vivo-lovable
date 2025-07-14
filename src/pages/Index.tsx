@@ -149,11 +149,14 @@ const Index = () => {
       <div className="bg-gradient-primary text-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <MessageSquare className="h-8 w-8" />
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center bg-white/10 px-3 py-2 rounded-lg">
+                <div className="w-8 h-8 bg-primary rounded-full mr-2"></div>
+                <span className="font-bold text-lg">tim</span>
+              </div>
               <div>
-                <h1 className="text-2xl font-bold">ChatViewer - Gestor de Conversaciones</h1>
-                <p className="text-whatsapp-light text-sm">
+                <h1 className="text-2xl font-bold">TIM Care - ChatViewer</h1>
+                <p className="text-white/80 text-sm">
                   Sistema de monitoreo WhatsApp Business
                 </p>
               </div>
