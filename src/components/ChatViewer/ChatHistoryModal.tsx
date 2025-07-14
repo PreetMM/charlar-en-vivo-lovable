@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,32 +8,89 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   User, 
   Bot, 
   X, 
   Phone,
   Clock,
-  MessageSquare
+  MessageSquare,
+  Send,
+  AlertTriangle,
+  Calendar,
+  RefreshCw
 } from "lucide-react";
-import { Conversation, ChatMessage } from "./types";
+import { Conversation, ChatMessage, ConversationStatus } from "./types";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { useToast } from "@/hooks/use-toast";
 
 interface ChatHistoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   conversation: Conversation | null;
   messages: ChatMessage[];
+  onStatusChange: (id: string, newStatus: ConversationStatus) => void;
+  onSendMessage?: (conversationId: string, message: string) => void;
 }
 
 export const ChatHistoryModal = ({ 
   isOpen, 
   onClose, 
   conversation, 
-  messages 
+  messages,
+  onStatusChange,
+  onSendMessage
 }: ChatHistoryModalProps) => {
+  const [newMessage, setNewMessage] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const { toast } = useToast();
+  
   if (!conversation) return null;
+
+  const handleStatusChange = (newStatus: ConversationStatus) => {
+    onStatusChange(conversation.id, newStatus);
+    
+    const statusLabels = {
+      agente_activo: "Agente IA",
+      intervencion_humana: "Intervención Humana",
+      estancada: "Estancada",
+      agendada: "Agendada"
+    };
+
+    toast({
+      title: "Modo de atención cambiado",
+      description: `Conversación cambiada a: ${statusLabels[newStatus]}`,
+    });
+  };
+
+  const handleSendMessage = () => {
+    if (!newMessage.trim()) return;
+    
+    setIsTyping(true);
+    
+    // Simular envío de mensaje
+    setTimeout(() => {
+      if (onSendMessage) {
+        onSendMessage(conversation.id, newMessage.trim());
+      }
+      setNewMessage("");
+      setIsTyping(false);
+      
+      toast({
+        title: "Mensaje enviado",
+        description: "Tu mensaje ha sido enviado correctamente",
+      });
+    }, 500);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   const formatMessageTime = (timestamp: Date) => {
     return format(timestamp, "dd/MM/yyyy HH:mm", { locale: es });
@@ -74,9 +132,61 @@ export const ChatHistoryModal = ({
           </div>
         </DialogHeader>
 
+        {/* Control de Modo de Atención */}
+        <div className="px-6 pb-4">
+          <div className="bg-muted/50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <RefreshCw className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium text-sm">Cambiar modo de atención:</span>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={conversation.status === 'agente_activo' ? "default" : "outline"}
+                  onClick={() => handleStatusChange('agente_activo')}
+                  disabled={conversation.status === 'agente_activo'}
+                >
+                  <Bot className="h-3 w-3 mr-1" />
+                  Agente IA
+                </Button>
+                <Button
+                  size="sm"
+                  variant={conversation.status === 'intervencion_humana' ? "default" : "outline"}
+                  onClick={() => handleStatusChange('intervencion_humana')}
+                  disabled={conversation.status === 'intervencion_humana'}
+                >
+                  <User className="h-3 w-3 mr-1" />
+                  Intervención Humana
+                </Button>
+                {conversation.status !== 'estancada' && (
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleStatusChange('estancada')}
+                  >
+                    <AlertTriangle className="h-3 w-3 mr-1" />
+                    Marcar Estancada
+                  </Button>
+                )}
+                {conversation.status !== 'agendada' && (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => handleStatusChange('agendada')}
+                  >
+                    <Calendar className="h-3 w-3 mr-1" />
+                    Marcar Agendada
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Chat Messages */}
-        <div className="flex-1 p-6 pt-4">
-          <ScrollArea className="h-[60vh] pr-4">
+        <div className="flex-1 px-6">
+          <ScrollArea className="h-[50vh] pr-4">
             {messages.length === 0 ? (
               <div className="flex items-center justify-center h-32 text-muted-foreground">
                 <div className="text-center">
@@ -135,6 +245,39 @@ export const ChatHistoryModal = ({
             )}
           </ScrollArea>
         </div>
+
+        {/* Área de envío de mensajes (solo si es intervención humana) */}
+        {conversation.status === 'intervencion_humana' && (
+          <div className="px-6 py-4 border-t bg-muted/30">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <User className="h-4 w-4" />
+                <span>Modo intervención humana activo - Puedes responder directamente</span>
+              </div>
+              <div className="flex space-x-2">
+                <Textarea
+                  placeholder="Escribe tu respuesta aquí... (Presiona Enter para enviar, Shift+Enter para nueva línea)"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  disabled={isTyping}
+                  className="flex-1 min-h-[60px] resize-none"
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!newMessage.trim() || isTyping}
+                  className="self-end"
+                >
+                  {isTyping ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer with stats */}
         <div className="p-6 pt-0 border-t bg-muted/30">

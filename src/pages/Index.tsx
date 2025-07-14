@@ -92,6 +92,39 @@ const Index = () => {
     setIsModalOpen(true);
   };
 
+  const handleSendMessage = (conversationId: string, message: string) => {
+    const newMessage: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      conversationId,
+      content: message,
+      timestamp: new Date(),
+      isFromUser: false,
+      isFromAgent: false // Mensaje de operador humano
+    };
+
+    // Actualizar los mensajes del chat
+    setChatMessages(prev => [...prev, newMessage]);
+    
+    // Actualizar la conversación con el último mensaje enviado
+    setConversations(prev => 
+      prev.map(conv => 
+        conv.id === conversationId 
+          ? { 
+              ...conv, 
+              lastSentMessage: message,
+              lastMessageTime: new Date(),
+              messagesCount: conv.messagesCount + 1
+            } 
+          : conv
+      )
+    );
+
+    toast({
+      title: "Mensaje enviado",
+      description: "Tu respuesta ha sido enviada al usuario",
+    });
+  };
+
   const filteredConversations = conversations.filter(conv => {
     const matchesSearch = conv.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          conv.phoneNumber.includes(searchTerm);
@@ -233,6 +266,8 @@ const Index = () => {
         onClose={() => setIsModalOpen(false)}
         conversation={selectedConversation}
         messages={chatMessages}
+        onStatusChange={handleStatusChange}
+        onSendMessage={handleSendMessage}
       />
     </div>
   );
