@@ -61,7 +61,30 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				whatsapp: {
+					primary: 'hsl(var(--whatsapp-primary))',
+					secondary: 'hsl(var(--whatsapp-secondary))',
+					light: 'hsl(var(--whatsapp-light))',
+					bg: 'hsl(var(--whatsapp-bg))'
+				},
+				status: {
+					active: 'hsl(var(--status-active))',
+					human: 'hsl(var(--status-human))',
+					stalled: 'hsl(var(--status-stalled))',
+					scheduled: 'hsl(var(--status-scheduled))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-card': 'var(--gradient-card)'
+			},
+			boxShadow: {
+				'chat': 'var(--shadow-chat)',
+				'card-custom': 'var(--shadow-card)'
+			},
+			transitionProperty: {
+				'smooth': 'var(--transition-smooth)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

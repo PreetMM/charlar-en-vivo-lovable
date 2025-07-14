@@ -17,24 +17,47 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 142 32% 93%;
+    --secondary-foreground: 142 76% 20%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 142 15% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 142 32% 93%;
+    --accent-foreground: 142 76% 20%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 142 76% 36%;
+
+    /* WhatsApp-inspired colors */
+    --whatsapp-primary: 142 70% 49%;
+    --whatsapp-secondary: 142 85% 25%;
+    --whatsapp-light: 142 32% 93%;
+    --whatsapp-bg: 112 20% 95%;
+    
+    /* Status colors */
+    --status-active: 142 76% 36%;
+    --status-human: 39 100% 50%;
+    --status-stalled: 0 84% 60%;
+    --status-scheduled: 217 91% 60%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--whatsapp-primary)), hsl(var(--whatsapp-secondary)));
+    --gradient-card: linear-gradient(145deg, hsl(var(--background)), hsl(var(--muted)));
+    
+    /* Shadows */
+    --shadow-chat: 0 2px 10px hsl(var(--whatsapp-primary) / 0.1);
+    --shadow-card: 0 4px 20px hsl(var(--foreground) / 0.08);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.5rem;
 
